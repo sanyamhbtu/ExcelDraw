@@ -110,6 +110,29 @@ app.post('/room',middleware , async (req, res) => {
     
     
 });
+app.get('/chats/:roodId',async (req,res) => {
+    const roomId = Number(req.params.roodId) ;
+    try{
+        const messages = await prismaClient.chat.findMany({
+            where : {
+                roomId: roomId
+            },
+            orderBy :{
+                id : "desc"
+            },
+            take : 50
+        })
+        res.json({
+            messages
+        })
+    }catch(e){
+        res.status(401).json({
+            message: "Failed to fetch data"
+        })
+    }
+    
+
+})
 
 
 
