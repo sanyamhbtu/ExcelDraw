@@ -5,11 +5,15 @@
  import { prismaClient } from '@repo/Database/db';
  import { middleware } from './middleware.js';
  import bcrypt from 'bcrypt'
+ import cors from 'cors'
  const app = express();
+ app.use(cors());
  app.use(express.json());
 const bcryptSalt = 10
 app.post('/signup', async (req, res) => {
+    console.log(req.body)
     const data = CreateUserSchema.safeParse(req.body);
+    console.log(data.error);
     if (!data.success) {
         res.status(400).json({
             message : "Invalid data"
@@ -148,5 +152,5 @@ app.get('/room/:slug', async (req, res) => {
 
 
 
-
- app.listen(3000);
+console.log("port is listening on 4000")
+ app.listen(4000);
