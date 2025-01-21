@@ -6,22 +6,22 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Mail, Lock, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import Cookies from 'js-cookie'
 import axios from "axios";
  function SignIn() : any {
   const [isLoading, setIsLoading] = useState(false);
   const [email,setEmail] = useState("");
   const [password,setPassword] = useState("");
+  const router = useRouter();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     // Add your sign-in logic here
     try {
       const response = await axios.post("http://localhost:4000/signin",{
-        data : {
           email,
           password
-        }
       })
       if(response.status === 200 && response.data.token !== undefined) {
         Cookies.set('token', response.data.token, {
@@ -29,12 +29,17 @@ import axios from "axios";
           secure: process.env.NODE_ENV === 'production',
           sameSite: 'strict',
         });
-        alert("Signed in successfully")
+        setTimeout(()=> {
+          alert("Signed in successfully")
+        },1000)
+        router.push('/dashboard');
+        
       }
     } catch (error) {
-      
-      alert("Error: " + error);
-      setIsLoading(true);
+      setTimeout(()=>{
+        alert("Error: " + error);
+      })
+      setIsLoading(false);
     }
   };
 

@@ -7,13 +7,14 @@
  import bcrypt from 'bcrypt'
  import cors from 'cors'
  const app = express();
- app.use(cors());
+ app.use(cors({
+    origin: 'http://localhost:3000',
+  credentials: true
+ }));
  app.use(express.json());
 const bcryptSalt = 10
 app.post('/signup', async (req, res) => {
-    console.log(req.body)
     const data = CreateUserSchema.safeParse(req.body);
-    console.log(data.error);
     if (!data.success) {
         res.status(400).json({
             message : "Invalid data"
@@ -66,13 +67,13 @@ app.post('/signin', async (req, res) => {
     });
     if(!user){
         res.status(401).json({
-            message : "Invalid credentials"
+            message : "No user find with email"
         });
         return;
     }
     if(!await bcrypt.compare(password, user.password)){
         res.status(401).json({
-            message: "Invalid credenetials"
+            message: "=passwords do not match"
         });
         return;
     }
@@ -138,6 +139,7 @@ app.get('/chats/:roodId',async (req,res) => {
 
 })
 app.get('/room/:slug', async (req, res) => {
+
     const slug = req.params.slug
     const room = await prismaClient.room.findFirst({
         where : {
@@ -149,6 +151,27 @@ app.get('/room/:slug', async (req, res) => {
     })
 })
 
+app.get('/rooms', async (req,res) => {
+    try {
+        const rooms = await prismaClient.room.findMany({
+            select: {
+                id : true,
+                createdAt : true,
+                slug : true
+            }
+        })
+        
+        res.status(200).json({
+            rooms
+        })
+        
+    } catch (error) {
+        res.status(404).json({
+            message : "failed to fetch rooms"
+        });
+    }
+    
+})
 
 
 

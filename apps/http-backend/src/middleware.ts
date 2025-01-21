@@ -1,40 +1,32 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import {JWT_SECRET} from '@repo/backend-common/config'
-
-export const middleware = (req: Request,res: Response,next: NextFunction) =>{
-    const authHeader  = req.headers['authorization'] || '';
-    console.log("authHeader",authHeader);
-    if( !authHeader|| !authHeader.startsWith("Bearer ")){
+import { JWT_SECRET } from '@repo/backend-common/config';
+import Cookie from "cookie";
+export const middleware = (req: Request, res: Response, next: NextFunction) => {
+    const cookies = Cookie.parse(req.headers.cookie || '');
+    const token = cookies.token;
+    if (!token) {
         res.status(401).json({
-            message : "Invalid token"
-        })
+            message: "Token missing"
+        });
         return;
     }
+
     try {
-        const token = authHeader.split(" ")[1];
-        console.log("token",token)
-        if (!token) {
-             res.status(401).json({
-                message: "Token missing",
+        const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
+        if (!decoded || !decoded.userId) {
+            res.status(401).json({
+                message: "Invalid decoded token"
             });
-            return;
-        }
-        const decoded = jwt.verify(token,JWT_SECRET) as {userId : string};
-        console.log("decoded",decoded)
-        if(!decoded || !decoded.userId){
-             res.status(401).json({
-                message: "Invalid decoded"
-            })
             return;
         }
         req.userId = decoded.userId;
         next();
     } catch (err) {
-        console.log(err);
+        console.error(err);
         res.status(401).json({
             message: 'Unauthorized'
         });
         return;
     }
-}
+};

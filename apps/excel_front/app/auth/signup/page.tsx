@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,19 +24,19 @@ import Cookies from "js-cookie";
   const [firstName , setFirstName] = useState("");
   const [lastName , setLastName] = useState("");
   const [avatar, setAvatar] = useState("");
+
+  const router = useRouter();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // Add your sign-up logic here
+    // Add your sign-up logic here console.log
     try {
       const response = await axios.post("http://localhost:4000/signup",{
-        data : {
           email,
           password,
           firstName,
           lastName,
           avatar
-        }
       })
       if(response.status === 200 && response.data.token !== undefined){
       Cookies.set('token', response.data.token, {
@@ -44,10 +45,16 @@ import Cookies from "js-cookie";
         sameSite: 'strict',
       })
       }
-      alert("User Signed in successfully")
+      setTimeout(() => {
+        alert("User Signed up successfully")
+      },1000)
+      router.push('/dashboard')
+      
     } catch (error) {
-      alert("Error: " + error)
-      setIsLoading(false)
+      setTimeout(() => {
+        alert("Error: " + error)
+      },1000)
+      setIsLoading(false);
     }
   };
 
