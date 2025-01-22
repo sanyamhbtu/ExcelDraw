@@ -4,6 +4,7 @@
  import { CreateRoomSchema , CreateUserSchema, SigninSchema } from '@repo/common/schema';
  import { prismaClient } from '@repo/Database/db';
  import { middleware } from './middleware.js';
+ import Cookie from "cookie";
  import bcrypt from 'bcrypt'
  import cors from 'cors'
  const app = express();
@@ -125,7 +126,7 @@ app.get('/chats/:roodId',async (req,res) => {
             orderBy :{
                 id : "desc"
             },
-            take : 50
+            take : 10000
         })
         res.json({
             messages
@@ -172,6 +173,7 @@ app.get('/rooms', async (req,res) => {
     }
     
 })
+
 
 
 
