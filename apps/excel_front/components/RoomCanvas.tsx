@@ -25,13 +25,14 @@ export function RoomCanvas({roomId} : {roomId: string}){
 
     
     if(!socket){
-        return <div> Connecting to server ...</div>
+        return (
+            <div className="flex h-screen w-screen items-center justify-center bg-[#121212] text-zinc-300">
+                <div className="flex items-center gap-3">
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/20 border-t-white" />
+                    Connecting to server…
+                </div>
+            </div>
+        )
     }
-    console.log("roomcanvas",socket);
-    return (
-        
-            <Canvas roomId={roomId} socket={socket}></Canvas>
-            
-        
-    )
+    return <Canvas roomId={roomId} socket={socket} />
 }

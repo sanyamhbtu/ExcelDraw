@@ -55,13 +55,12 @@ export default function Dashboard() {
       const response = await axios.post(`${HTTP_BACKEND}/room`,{
           name : slug
       },
-      { withCredentials: true }
+      { headers: { Authorization: `Bearer ${token}` } }
     )
-    if(response.status !== 200 && response.data.roomId === undefined) {
-      alert("Room currently unavailable");
-    }
-    if(response.status === 200 && response.data.roomId !== undefined) {
+    if(response.data.roomId !== undefined) {
       router.push(`/canvas/${response.data.roomId}`)
+    } else {
+      alert("Room currently unavailable");
     }
       setIsModalOpen(false);
     } catch (err) {

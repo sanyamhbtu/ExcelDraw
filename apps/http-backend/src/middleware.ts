@@ -3,8 +3,13 @@ import jwt from "jsonwebtoken";
 import { JWT_SECRET } from '@repo/backend-common/config';
 import Cookie from "cookie";
 export const middleware = (req: Request, res: Response, next: NextFunction) => {
+    // Prefer the Authorization: Bearer <token> header; fall back to a cookie.
+    const authHeader = req.headers.authorization || '';
+    const headerToken = authHeader.startsWith('Bearer ')
+        ? authHeader.slice('Bearer '.length).trim()
+        : undefined;
     const cookies = Cookie.parse(req.headers.cookie || '');
-    const token = cookies.token;
+    const token = headerToken || cookies.token;
     if (!token) {
         res.status(401).json({
             message: "Token missing"

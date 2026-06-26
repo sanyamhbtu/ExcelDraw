@@ -1,138 +1,157 @@
 "use client";
 
-import { useState } from "react";
 import {
+  MousePointer2,
+  Hand,
   Square,
   Diamond,
   Circle,
   Minus,
   Pencil,
   Eraser,
-  Menu,
-  X,
+  Trash2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Tool } from "../Canvas";
-type ToolName = "rectangle" | "rhombus" | "circle" | "line" | "pencil" | "eraser";
 
 export interface DrawingToolbarProps {
-  setSelectedTool: React.Dispatch<React.SetStateAction<Tool>>;
+  selectedTool: Tool;
+  setSelectedTool: (tool: Tool) => void;
+  strokeColor: string;
+  setStrokeColor: (color: string) => void;
+  strokeWidth: number;
+  setStrokeWidth: (width: number) => void;
+  onDeleteSelected?: () => void;
 }
 
+const tools: { id: Tool; icon: typeof Square; label: string; shortcut: string }[] = [
+  { id: "select", icon: MousePointer2, label: "Select", shortcut: "V" },
+  { id: "hand", icon: Hand, label: "Pan", shortcut: "H" },
+  { id: "rect", icon: Square, label: "Rectangle", shortcut: "R" },
+  { id: "rhombus", icon: Diamond, label: "Diamond", shortcut: "D" },
+  { id: "circle", icon: Circle, label: "Ellipse", shortcut: "O" },
+  { id: "line", icon: Minus, label: "Line", shortcut: "L" },
+  { id: "pencil", icon: Pencil, label: "Draw", shortcut: "P" },
+  { id: "eraser", icon: Eraser, label: "Eraser", shortcut: "E" },
+];
 
-const tools = [
-  { id: "rectangle", icon: Square, label: "Rectangle" },
-  { id: "rhombus", icon: Diamond, label: "Rhombus" },
-  { id: "circle", icon: Circle, label: "Circle" },
-  { id: "line", icon: Minus, label: "Line" },
-  { id: "pencil", icon: Pencil, label: "Pencil" },
-  { id: "eraser", icon: Eraser, label: "Eraser" },
-] as const;
-export function DrawingToolbar({setSelectedTool} :DrawingToolbarProps) {
-  const [selectedToolInside, setSelectedToolInside] = useState<ToolName>("pencil");
-  const [isOpen, setIsOpen] = useState(false);
-  
-  const toolButtonClass = (toolId: ToolName) => cn(
-    "flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300",
-    "bg-background/10 backdrop-blur-sm border border-border/50",
-    "hover:bg-accent hover:border-accent-foreground/20",
-    "focus:outline-none focus:ring-2 focus:ring-accent-foreground/20",
-    {
-      "ring-2 ring-accent-foreground": selectedToolInside === toolId,
-      "hover:shadow-[0_0_20px_rgba(191,0,255,0.7)]": true,
-      "shadow-[0_0_10px_rgba(0,242,255,0.5)]": selectedToolInside === toolId,
-    }
-  );
+const palette = ["#e3e3e8", "#ff8383", "#7cf5a0", "#7cb8ff", "#ffd166", "#c792ff"];
+const widths = [
+  { value: 2, label: "Thin" },
+  { value: 4, label: "Bold" },
+  { value: 7, label: "Extra" },
+];
 
-
+export function DrawingToolbar({
+  selectedTool,
+  setSelectedTool,
+  strokeColor,
+  setStrokeColor,
+  strokeWidth,
+  setStrokeWidth,
+  onDeleteSelected,
+}: DrawingToolbarProps) {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-[rgb(20,20,35)] to-[rgb(45,10,80)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative flex items-center justify-between h-16">
-          {/* Mobile menu button */}
-          <div className="sm:hidden">
+    <div className="pointer-events-none fixed inset-x-0 top-4 z-50 flex justify-center px-4">
+      <div className="pointer-events-auto flex items-center gap-1 rounded-2xl border border-white/10 bg-zinc-900/70 p-1.5 shadow-2xl shadow-black/40 backdrop-blur-xl">
+        {/* Tools */}
+        {tools.map(({ id, icon: Icon, label, shortcut }) => (
+          <button
+            key={id}
+            onClick={() => setSelectedTool(id)}
+            title={`${label} — ${shortcut}`}
+            aria-label={label}
+            aria-pressed={selectedTool === id}
+            className={cn(
+              "group relative flex h-10 w-10 items-center justify-center rounded-xl transition-colors",
+              selectedTool === id
+                ? "bg-[#7c5cff] text-white shadow-lg shadow-[#7c5cff]/30"
+                : "text-zinc-300 hover:bg-white/10 hover:text-white"
+            )}
+          >
+            <Icon className="h-[18px] w-[18px]" />
+            <span className="pointer-events-none absolute -bottom-1 right-1 text-[9px] font-medium opacity-40">
+              {shortcut}
+            </span>
+          </button>
+        ))}
+
+        <div className="mx-1 h-7 w-px bg-white/10" />
+
+        {/* Color palette */}
+        <div className="flex items-center gap-1 px-1">
+          {palette.map((c) => (
             <button
-              onClick={() => setIsOpen(!isOpen)}
-              className={toolButtonClass("pencil" as ToolName)}
-              aria-label="Toggle menu"
-            >
-              {isOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
+              key={c}
+              onClick={() => setStrokeColor(c)}
+              title={c}
+              aria-label={`Color ${c}`}
+              className={cn(
+                "h-6 w-6 rounded-full border transition-transform hover:scale-110",
+                strokeColor.toLowerCase() === c.toLowerCase()
+                  ? "border-white ring-2 ring-white/60"
+                  : "border-white/20"
               )}
+              style={{ backgroundColor: c }}
+            />
+          ))}
+          <label
+            className="relative h-6 w-6 cursor-pointer overflow-hidden rounded-full border border-white/20"
+            title="Custom color"
+          >
+            <span
+              className="block h-full w-full"
+              style={{
+                background:
+                  "conic-gradient(red, orange, yellow, lime, cyan, blue, magenta, red)",
+              }}
+            />
+            <input
+              type="color"
+              value={strokeColor}
+              onChange={(e) => setStrokeColor(e.target.value)}
+              className="absolute inset-0 cursor-pointer opacity-0"
+            />
+          </label>
+        </div>
+
+        <div className="mx-1 h-7 w-px bg-white/10" />
+
+        {/* Stroke width */}
+        <div className="flex items-center gap-1 px-1">
+          {widths.map(({ value, label }) => (
+            <button
+              key={value}
+              onClick={() => setStrokeWidth(value)}
+              title={`${label} stroke`}
+              aria-label={`${label} stroke`}
+              className={cn(
+                "flex h-8 w-8 items-center justify-center rounded-lg transition-colors",
+                strokeWidth === value ? "bg-white/15" : "hover:bg-white/10"
+              )}
+            >
+              <span
+                className="rounded-full bg-current text-zinc-200"
+                style={{ width: 18, height: value }}
+              />
             </button>
-          </div>
-
-          {/* Desktop navigation */}
-          <div className="hidden sm:flex sm:items-center sm:gap-4">
-            {tools.map(({ id, icon: Icon, label }) => (
-              <button
-                key={id}
-                onClick={() => {
-                  setSelectedToolInside(id)
-                  if(label === "Circle"){
-                    setSelectedTool("circle")
-                  }else if(label === "Eraser"){
-                    setSelectedTool("eraser")
-                  }else if(label === "Line"){
-                    setSelectedTool("line")
-                  }else if (label === "Pencil"){
-                    setSelectedTool("pencil")
-                  }else if (label === "Rectangle"){
-                    setSelectedTool("rect")
-                  }else if (label === "Rhombus"){
-                    setSelectedTool("rhombus")
-                  }
-                }}
-                className={toolButtonClass(id)}
-                aria-label={label}
-                title={label}
-              >
-                <Icon className="h-5 w-5" />
-                <span className="hidden lg:inline">{label}</span>
-              </button>
-            ))}
-            
-          </div>
-          {/* Right side controls */}
-          <div className="flex items-center gap-4">
-                <div className="h-14 w-14 rounded-full border border-zinc-200 bg-red-900 flex items-center justify-center">
-                 User
-                </div>
-          </div>
-
-          
-          
+          ))}
         </div>
 
-        {/* Mobile navigation */}
-        <div
-          className={cn(
-            "sm:hidden transition-all duration-300 overflow-hidden",
-            isOpen ? "max-h-96" : "max-h-0"
-          )}
-        >
-          <div className="px-2 pt-2 pb-3 space-y-1">
-            {tools.map(({ id, icon: Icon, label }) => (
-              <button
-                key={id}
-                onClick={() => setSelectedToolInside(id)}
-                className={cn(
-                  toolButtonClass(id),
-                  "w-full justify-start"
-                )}
-                aria-label={label}
-              >
-                <Icon className="h-5 w-5" />
-                <span>{label}</span>
-              </button>
-            ))}
-            
-          </div>
-          
-        </div>
+        {selectedTool === "select" && onDeleteSelected && (
+          <>
+            <div className="mx-1 h-7 w-px bg-white/10" />
+            <button
+              onClick={onDeleteSelected}
+              title="Delete selected — Del"
+              aria-label="Delete selected"
+              className="flex h-10 w-10 items-center justify-center rounded-xl text-zinc-300 transition-colors hover:bg-red-500/20 hover:text-red-300"
+            >
+              <Trash2 className="h-[18px] w-[18px]" />
+            </button>
+          </>
+        )}
       </div>
-    </nav>
+    </div>
   );
 }

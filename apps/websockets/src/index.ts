@@ -2,7 +2,8 @@ import { WebSocketServer, WebSocket } from 'ws';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '@repo/backend-common/config';
 import {prismaClient} from '@repo/database/db'
-const wss = new WebSocketServer({ port: 8080 });
+const PORT = Number(process.env.PORT) || 8080;
+const wss = new WebSocketServer({ port: PORT });
 
 interface User {
   userId: string;
@@ -49,31 +50,36 @@ wss.on('connection', function connection(ws, request) {
 
   users.push(user);
 
-  ws.on('message', async function message(data : string) {
+  ws.on('message', async function message(data) {
     try {
-      const parsedData = JSON.parse(data);
+      const parsedData = JSON.parse(data.toString());
       console.log("parseddata on message", parsedData)
       if (parsedData.type === "join_room") {
-        const roomId = parsedData.roomId;
+        // Normalize to string so join/leave/broadcast always compare the same type.
+        const roomId = String(parsedData.roomId);
         const user = users.find(x => x.userId === userId);
-        if (user && roomId) {
+        if (user && parsedData.roomId !== undefined && !user.rooms.includes(roomId)) {
           user.rooms.push(roomId);
         }
       } else if (parsedData.type === "leave_room") {
-        const roomId = parsedData.roomId;
+        const roomId = String(parsedData.roomId);
         const user = users.find(x => x.userId === userId);
-        if (user && roomId) {
+        if (user && parsedData.roomId !== undefined) {
           user.rooms = user.rooms.filter(x => x !== roomId);
         }
       } else if (parsedData.type === "chat") {
-        const roomId = parsedData.roomId;
+        const roomId = String(parsedData.roomId);
         const message = parsedData.message;
+        const roomIdNum = Number(parsedData.roomId);
+        if (Number.isNaN(roomIdNum)) {
+          return;
+        }
         try {
-          const data = await prismaClient.chat.create({
+          await prismaClient.chat.create({
             data : {
               message,
               userId,
-              roomId : Number(roomId)
+              roomId : roomIdNum
             }
           })
             users.forEach(user => {
@@ -88,8 +94,8 @@ wss.on('connection', function connection(ws, request) {
         } catch (error) {
            console.log(error);
         }
-        
-        
+
+
       }
     } catch (error) {
       console.error('Error processing message:', error);
