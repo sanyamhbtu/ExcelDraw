@@ -11,7 +11,6 @@ import {
   Mail,
   Lock,
   User,
-  Upload,
   Loader2,
 } from "lucide-react";
 import axios from "axios";
@@ -23,43 +22,37 @@ import Cookies from "js-cookie";
   const [password, setPassword] = useState("");
   const [firstName , setFirstName] = useState("");
   const [lastName , setLastName] = useState("");
-  const [avatar, setAvatar] = useState("");
 
   const router = useRouter();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // Add your sign-up logic here console.log
     try {
-      const response = await axios.post("http://localhost:4000/signup",{
-          email,
-          password,
-          firstName,
-          lastName,
-          avatar
-      })
-      if(response.status === 200 && response.data.token !== undefined){
-      Cookies.set('token', response.data.token, {
-        expires: 1,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-      })
+      const response = await axios.post("http://localhost:4000/signup", {
+        email,
+        password,
+        firstName,
+        lastName,
+      });
+      if (response.status === 200 && response.data.token) {
+        Cookies.set('token', response.data.token, {
+          expires: 1,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'strict',
+        });
+        router.push('/dashboard');
+        return;
       }
-      setTimeout(() => {
-        alert("User Signed up successfully")
-      },1000)
-      router.push('/dashboard')
-      
+      alert("Sign up failed. Please try again.");
+      setIsLoading(false);
     } catch (error) {
-      setTimeout(() => {
-        alert("Error: " + error)
-      },1000)
+      alert("Error: " + error);
       setIsLoading(false);
     }
   };
 
   return (
-    <Card className="p-6 backdrop-blur-md bg-black/40 border-muted/20 shadow-2xl">
+    <Card className="p-6 backdrop-blur-md bg-card/80 border-border shadow-2xl">
       <div className="space-y-6">
         <div className="space-y-2 text-center">
           <h1 className="text-2xl font-semibold tracking-tight">
@@ -134,22 +127,6 @@ import Cookies from "js-cookie";
                 className="pl-9"
                 onChange={(event) => {
                   setPassword(event.target.value);
-                }}
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="avatar">Profile Picture (Optional)</Label>
-            <div className="relative">
-              <Upload className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input
-                id="avatar"
-                type="file"
-                accept="image/*"
-                className="pl-9"
-                onChange={(event) => {
-                  setAvatar(event.target.value);
                 }}
               />
             </div>

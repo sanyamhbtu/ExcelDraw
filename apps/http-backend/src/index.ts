@@ -60,7 +60,6 @@ app.post('/signup', async (req, res) => {
             });
             return;
         }
-        console.log(e);
         res.status(500).json({
             message : "Internal Server Error"
         });
@@ -99,7 +98,6 @@ app.post('/signin', async (req, res) => {
             token
         });
     } catch (e) {
-        console.log(e);
         res.status(500).json({
             message : "Internal Server Error"
         });
@@ -134,7 +132,6 @@ app.post('/room',middleware , async (req, res) => {
             })
             return;
         }
-        console.log(e);
         res.status(500).json({
             message : "Internal Server Error"
         })
@@ -142,7 +139,7 @@ app.post('/room',middleware , async (req, res) => {
     
     
 });
-app.get('/chats/:roomId',async (req,res) => {
+app.get('/chats/:roomId', middleware, async (req,res) => {
     const roomId = Number(req.params.roomId);
     if (Number.isNaN(roomId)) {
         res.status(400).json({
@@ -164,7 +161,6 @@ app.get('/chats/:roomId',async (req,res) => {
             messages
         })
     }catch(e){
-        console.log(e);
         res.status(500).json({
             message: "Failed to fetch data"
         })
@@ -172,7 +168,7 @@ app.get('/chats/:roomId',async (req,res) => {
 
 
 })
-app.get('/room/:slug', async (req, res) => {
+app.get('/room/:slug', middleware, async (req, res) => {
 
     const slug = req.params.slug
     try {
@@ -191,14 +187,13 @@ app.get('/room/:slug', async (req, res) => {
             room
         })
     } catch (e) {
-        console.log(e);
         res.status(500).json({
             message : "Internal Server Error"
         })
     }
 })
 
-app.get('/rooms', async (req,res) => {
+app.get('/rooms', middleware, async (req,res) => {
     try {
         const rooms = await prismaClient.room.findMany({
             select: {
@@ -213,7 +208,6 @@ app.get('/rooms', async (req,res) => {
         })
         
     } catch (error) {
-        console.log(error);
         res.status(500).json({
             message : "failed to fetch rooms"
         });
@@ -224,6 +218,4 @@ app.get('/rooms', async (req,res) => {
 
 
 
- app.listen(PORT, () => {
-    console.log(`port is listening on ${PORT}`)
- });
+ app.listen(PORT);

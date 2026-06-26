@@ -27,31 +27,37 @@ export default function Dashboard() {
   const [slug, setSlug] = useState("");
   const router = useRouter();
   const token = Cookies.get("token");
-    useEffect(() => {
-      const fetchRooms = async () => {
-        try {
-          const response = await axios.get(`${HTTP_BACKEND}/rooms`);
-          setRooms(response.data.rooms);
-          setLoading(false);
-        } catch (error) {
-          console.error("Error fetching rooms:", error);
-          setLoading(false);
-        }
-      };
-  
-      fetchRooms();
-    },[])
 
-   if(!token){
-    router.push('/auth');
-   }
+  // Redirect unauthenticated users (navigation must happen as an effect,
+  // not during render).
+  useEffect(() => {
+    if (!token) router.push('/auth');
+  }, [token, router]);
+
+  useEffect(() => {
+    if (!token) return;
+    const fetchRooms = async () => {
+      try {
+        const response = await axios.get(`${HTTP_BACKEND}/rooms`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setRooms(response.data.rooms);
+      } catch (error) {
+        console.error("Error fetching rooms:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRooms();
+  }, [token])
+
    const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setBLoading(true);
     setError("");
 
     try {
-      // Simulate API call
       const response = await axios.post(`${HTTP_BACKEND}/room`,{
           name : slug
       },
@@ -60,14 +66,13 @@ export default function Dashboard() {
     if(response.data.roomId !== undefined) {
       router.push(`/canvas/${response.data.roomId}`)
     } else {
-      alert("Room currently unavailable");
+      setError("Room currently unavailable. Please try again.");
     }
       setIsModalOpen(false);
-    } catch (err) {
-      console.log(err);
+    } catch {
       setError("Something went wrong. Please try again.");
     } finally {
-      setLoading(false);
+      setBLoading(false);
     }
   };
   return (
@@ -89,9 +94,8 @@ export default function Dashboard() {
             ))
           ) : (
             rooms.map((room : Room) => (
-              <Link href={`/canvas/${room.id}`}>
-              <Card 
-                key={room.id} 
+              <Link key={room.id} href={`/canvas/${room.id}`}>
+              <Card
                 className="group h-40 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-lg bg-gradient-to-br from-card via-card/80 to-accent/5 before:absolute before:inset-0 before:bg-grid-white/[0.02] before:content-['']"
               >
                 <div className="relative z-20 p-4 h-full flex flex-col justify-between">

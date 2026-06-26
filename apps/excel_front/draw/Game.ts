@@ -45,6 +45,12 @@ const MIN_SCALE = 0.1;
 const MAX_SCALE = 8;
 const GRID_SIZE = 40;
 
+export type CanvasTheme = "light" | "dark";
+const GRID_COLOR: Record<CanvasTheme, string> = {
+  dark: "rgba(160,130,255,0.10)",
+  light: "rgba(30,30,45,0.06)",
+};
+
 const newId = () =>
   typeof crypto !== "undefined" && "randomUUID" in crypto
     ? crypto.randomUUID()
@@ -84,15 +90,22 @@ export class Game {
   private panStart: Point = { x: 0, y: 0 };
   private spaceDown = false;
   private dpr = 1;
+  private theme: CanvasTheme = "dark";
 
   // callbacks for React
   onZoomChange?: (zoom: number) => void;
 
-  constructor(canvas: HTMLCanvasElement, roomId: string, socket: WebSocket) {
+  constructor(
+    canvas: HTMLCanvasElement,
+    roomId: string,
+    socket: WebSocket,
+    theme: CanvasTheme = "dark"
+  ) {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d")!;
     this.roomId = roomId;
     this.socket = socket;
+    this.theme = theme;
 
     this.resize();
     this.initHandlers();
@@ -100,6 +113,11 @@ export class Game {
   }
 
   /* ----------------------------- public API ----------------------- */
+
+  setTheme(theme: CanvasTheme) {
+    this.theme = theme;
+    this.render();
+  }
 
   setTool(tool: Tool) {
     this.selectedTool = tool;
@@ -524,7 +542,7 @@ export class Game {
 
     ctx.save();
     ctx.lineWidth = 1 / this.scale;
-    ctx.strokeStyle = "rgba(255,255,255,0.05)";
+    ctx.strokeStyle = GRID_COLOR[this.theme];
     ctx.beginPath();
     const startX = Math.floor(topLeft.x / GRID_SIZE) * GRID_SIZE;
     const startY = Math.floor(topLeft.y / GRID_SIZE) * GRID_SIZE;
@@ -543,10 +561,17 @@ export class Game {
   private drawShape(shape: Shape, selected: boolean) {
     const ctx = this.ctx;
     ctx.save();
-    ctx.strokeStyle = shape.strokeColor ?? DEFAULT_COLOR;
+    const color = shape.strokeColor ?? DEFAULT_COLOR;
+    ctx.strokeStyle = color;
     ctx.lineWidth = shape.strokeWidth ?? DEFAULT_WIDTH;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
+
+    // Neon glow: in dark mode every stroke gets a soft colored halo.
+    if (this.theme === "dark" && !selected) {
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 8 + (shape.strokeWidth ?? DEFAULT_WIDTH) * 1.5;
+    }
 
     switch (shape.type) {
       case "rect":

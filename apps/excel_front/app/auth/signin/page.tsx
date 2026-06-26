@@ -44,7 +44,7 @@ import axios from "axios";
   };
 
   return (
-    <Card className="p-6 backdrop-blur-md bg-black/40 border-muted/20 shadow-2xl">
+    <Card className="p-6 backdrop-blur-md bg-card/80 border-border shadow-2xl">
       <div className="space-y-6">
         <div className="space-y-2 text-center">
           <h1 className="text-2xl font-semibold tracking-tight">Welcome back</h1>

@@ -53,7 +53,6 @@ wss.on('connection', function connection(ws, request) {
   ws.on('message', async function message(data) {
     try {
       const parsedData = JSON.parse(data.toString());
-      console.log("parseddata on message", parsedData)
       if (parsedData.type === "join_room") {
         // Normalize to string so join/leave/broadcast always compare the same type.
         const roomId = String(parsedData.roomId);
@@ -92,7 +91,7 @@ wss.on('connection', function connection(ws, request) {
               }
             });
         } catch (error) {
-           console.log(error);
+           console.error('Failed to persist/broadcast chat:', error);
         }
 
 

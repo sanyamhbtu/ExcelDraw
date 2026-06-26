@@ -3,6 +3,11 @@ import { useEffect, useRef, useState } from "react";
 import { Minus, Plus, Maximize } from "lucide-react";
 import { DrawingToolbar } from "@/components/canvas/navbar";
 import { Game } from "@/draw/Game";
+import { useThemeStore } from "@/lib/theme";
+
+// Default stroke per theme so freshly drawn shapes stay visible on either canvas.
+const DARK_STROKE = "#e3e3e8";
+const LIGHT_STROKE = "#1f1f23";
 
 export type Tool =
   | "select"
@@ -43,18 +48,37 @@ export function Canvas({ roomId, socket }: { roomId: string; socket: WebSocket }
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [game, setGame] = useState<Game>();
   const [selectedTool, setSelectedTool] = useState<Tool>("pencil");
-  const [strokeColor, setStrokeColor] = useState("#e3e3e8");
+  const theme = useThemeStore((s) => s.theme);
+  const [strokeColor, setStrokeColor] = useState(
+    theme === "light" ? LIGHT_STROKE : DARK_STROKE
+  );
   const [strokeWidth, setStrokeWidth] = useState(2);
   const [zoom, setZoom] = useState(1);
 
   // create the engine once the canvas + socket are ready
   useEffect(() => {
     if (!canvasRef.current || !socket) return;
-    const g = new Game(canvasRef.current, roomId, socket);
+    const g = new Game(canvasRef.current, roomId, socket, theme);
     g.onZoomChange = (z) => setZoom(z);
     setGame(g);
     return () => g.destroy();
+    // theme intentionally excluded — re-theming is handled below without
+    // recreating the engine (which would wipe the in-progress drawing).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomId, socket]);
+
+  // re-theme the engine live, and swap the default stroke so drawing stays
+  // visible when the user flips light/dark.
+  useEffect(() => {
+    game?.setTheme(theme);
+    setStrokeColor((c) =>
+      c === DARK_STROKE || c === LIGHT_STROKE
+        ? theme === "light"
+          ? LIGHT_STROKE
+          : DARK_STROKE
+        : c
+    );
+  }, [theme, game]);
 
   // keep the engine in sync with React state
   useEffect(() => {
@@ -86,7 +110,7 @@ export function Canvas({ roomId, socket }: { roomId: string; socket: WebSocket }
   }, []);
 
   return (
-    <main className="relative h-screen w-screen overflow-hidden bg-[#121212]">
+    <main className="relative h-screen w-screen overflow-hidden bg-[hsl(var(--canvas-bg))]">
       <DrawingToolbar
         selectedTool={selectedTool}
         setSelectedTool={setSelectedTool}

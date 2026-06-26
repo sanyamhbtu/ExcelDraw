@@ -1,4 +1,5 @@
 import axios from "axios";
+import Cookies from "js-cookie";
 import { HTTP_BACKEND } from "@/config";
 
 /**
@@ -8,7 +9,10 @@ import { HTTP_BACKEND } from "@/config";
  */
 export const getExistingShape = async (roomId: string) => {
   try {
-    const response = await axios.get(`${HTTP_BACKEND}/chats/${roomId}`);
+    const token = Cookies.get("token");
+    const response = await axios.get(`${HTTP_BACKEND}/chats/${roomId}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+    });
     const messages = response.data.messages ?? [];
     // The backend returns newest-first; fold them oldest-first so that
     // delete/update markers are applied after the shapes they reference.
