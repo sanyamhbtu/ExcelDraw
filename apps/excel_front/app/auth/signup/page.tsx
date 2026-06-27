@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { HTTP_BACKEND } from "@/config";
  function SignUp() {
   const [isLoading, setIsLoading] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
@@ -28,7 +29,7 @@ import Cookies from "js-cookie";
     e.preventDefault();
     setIsLoading(true);
     try {
-      const response = await axios.post("http://localhost:4000/signup", {
+      const response = await axios.post(`${HTTP_BACKEND}/signup`, {
         email,
         password,
         firstName,

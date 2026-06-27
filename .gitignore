@@ -5,6 +5,11 @@ node_modules
 .pnp
 .pnp.js
 
+# This is a pnpm workspace — npm/yarn lockfiles must not be committed
+# (a stray package-lock.json breaks Vercel's package-manager detection).
+package-lock.json
+yarn.lock
+
 # Local env files
 .env
 .env.local

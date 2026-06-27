@@ -9,6 +9,7 @@ import { Mail, Lock, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Cookies from 'js-cookie'
 import axios from "axios";
+import { HTTP_BACKEND } from "@/config";
  function SignIn() : any {
   const [isLoading, setIsLoading] = useState(false);
   const [email,setEmail] = useState("");
@@ -19,7 +20,7 @@ import axios from "axios";
     setIsLoading(true);
     // Add your sign-in logic here
     try {
-      const response = await axios.post("http://localhost:4000/signin",{
+      const response = await axios.post(`${HTTP_BACKEND}/signin`,{
           email,
           password
       })
