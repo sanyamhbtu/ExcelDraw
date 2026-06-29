@@ -4,7 +4,7 @@ services:
     env: node
     plan: free
     buildCommand: pnpm install && pnpm run build --filter http-backend
-    startCommand: pnpm run start --filter http-backend
+    startCommand: node apps/http-backend/dist/index.js
     envVars:
       - key: PORT
         value: 4000
@@ -18,7 +18,7 @@ services:
     env: node
     plan: free
     buildCommand: pnpm install && pnpm run build --filter websockets
-    startCommand: pnpm run start --filter websockets
+    startCommand: node apps/websockets/dist/index.js
     envVars:
       - key: PORT
         value: 8080
