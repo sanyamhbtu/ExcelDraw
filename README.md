@@ -1,119 +1,106 @@
-<div align="center">
-  <br />
-  <h1>✨ ExcelDraw</h1>
-  <p>
-    <strong>Instantly craft collaborative diagrams on the web.</strong>
-  </p>
-  <p>
-    Draw at the speed of thought with an infinite, zooming workspace built for teams. 
-  </p>
-  <br />
-</div>
-
-## 📸 Preview
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=1e3a8a&height=250&section=header&text=ExcelDraw&fontSize=70&fontAlignY=35&fontColor=ffffff&desc=Collaborative%20Whiteboard&descAlignY=55&descAlign=50" />
+</p>
 
 <div align="center">
-  <!-- Note: Make sure to upload the landing page screenshot to the 'docs' folder or update this path to your hosted image URL -->
-  <img src="./docs/landing.png" alt="ExcelDraw Landing Page" width="100%" style="border-radius: 12px; box-shadow: 0 4px 30px rgba(0,0,0,0.1);" />
+  <p align="center">
+    <a href="https://excel-draw-excel-front.vercel.app/"><img src="https://img.shields.io/badge/Live_Demo-View_App_Now-1e3a8a?style=for-the-badge&logo=vercel" alt="Live Demo" /></a>
+    <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white" />
+    <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" />
+    <img src="https://img.shields.io/badge/WebSockets-010101?style=for-the-badge&logo=socket.io&logoColor=white" />
+    <img src="https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white" />
+    <img src="https://img.shields.io/badge/Turborepo-EF4444?style=for-the-badge&logo=turborepo&logoColor=white" />
+  </p>
+  
+  <h2>✨ Instantly craft collaborative diagrams on the web ✨</h2>
+  <p>Draw at the speed of thought with an infinite, zooming workspace built for teams.</p>
 </div>
 
-## 🚀 Features
+<br/>
 
-- **Infinite Canvas:** A seamless workspace where your ideas can blossom without limits.
-- **Real-Time Collaboration:** Powered by WebSockets, multiple users can draw and interact simultaneously.
-- **Cinematic UI/UX:** Stunning visuals, glassmorphism, fluid animations (Framer Motion), and a captivating particle background.
-- **Team Workspaces:** Create rooms, share links, and sync instantly.
-- **Modern Monorepo:** Structured using Turborepo for efficient scaling and development.
+<div align="center">
+  <a href="https://excel-draw-excel-front.vercel.app/">
+    <!-- NOTE: The image won't show until you place 'landing.png' inside the 'docs' folder and commit it! -->
+    <img src="./docs/landing.png" alt="ExcelDraw Dashboard Interface" width="90%" style="border-radius: 16px; border: 2px solid #2d3748; box-shadow: 0 10px 40px rgba(0,0,0,0.5);" />
+  </a>
+</div>
 
-## 🛠 Tech Stack
+<br/>
 
-**Frontend (Apps & UI)**
-- [Next.js](https://nextjs.org/) (App Router)
-- [React](https://reactjs.org/)
-- [Tailwind CSS](https://tailwindcss.com/) & [Framer Motion](https://www.framer.com/motion/)
-- [Radix UI](https://www.radix-ui.com/) (Shadcn components)
+<table align="center" border="0" width="100%">
+  <tr>
+    <td width="50%" valign="top">
+      <h3 align="center">🚀 Key Features</h3>
+      <ul>
+        <li>♾️ <b>Infinite Canvas:</b> A seamless workspace where your ideas can blossom without boundaries.</li>
+        <li>⚡ <b>Real-Time Sync:</b> Custom WebSocket implementation for instant multi-user collaboration.</li>
+        <li>🎨 <b>Cinematic UI:</b> Glassmorphism, deep dark-mode, and fluid Framer Motion animations.</li>
+        <li>🔒 <b>Team Workspaces:</b> Create secure rooms, share links, and draw together.</li>
+        <li>📦 <b>Monorepo Power:</b> Engineered with Turborepo for massive scalability.</li>
+      </ul>
+    </td>
+    <td width="50%" valign="top">
+      <h3 align="center">🛠️ Tech Architecture</h3>
+      <ul>
+        <li><b>Frontend:</b> Next.js 15, React 18, Tailwind, Radix UI</li>
+        <li><b>State & Motion:</b> Zustand, Framer Motion</li>
+        <li><b>Backend API:</b> Node.js, Express</li>
+        <li><b>Real-time Engine:</b> WebSockets Server</li>
+        <li><b>Data Layer:</b> Prisma ORM, PostgreSQL</li>
+      </ul>
+    </td>
+  </tr>
+</table>
 
-**Backend (API & Real-time)**
-- Node.js & Express (`http-backend`)
-- WebSockets (`websockets`)
-- [Prisma](https://www.prisma.io/) (Database ORM)
-- [PostgreSQL](https://www.postgresql.org/)
+<br/>
 
-**Architecture**
-- [Turborepo](https://turbo.build/repo)
-- TypeScript
+## 🌌 The Ecosystem
 
-## 📂 Project Structure
+> *ExcelDraw is structured as a modern monorepo, separating frontend, backend, and real-time concerns into a highly optimized workspace.*
 
-This project is a monorepo utilizing **Turborepo** with the following layout:
+<div align="left">
+<pre>
+ExcelDraw/
+├── <b>apps/</b>
+│   ├── excel_front   <i>— Next.js App Router (The Canvas UI)</i>
+│   ├── http-backend  <i>— Express REST API (Auth & Rooms)</i>
+│   └── websockets    <i>— Realtime Server (State Synchronization)</i>
+└── <b>packages/</b>
+    ├── ui            <i>— Radix & Tailwind shared components</i>
+    ├── database      <i>— Prisma schema & PostgreSQL connection</i>
+    └── common        <i>— Zod schemas & shared types</i>
+</pre>
+</div>
 
-### Apps
-- `apps/excel_front`: The Next.js frontend application.
-- `apps/http-backend`: REST API handling authentication, room creation, and user management.
-- `apps/websockets`: Real-time WebSocket server for syncing canvas data.
+<br/>
 
-### Packages
-- `packages/common`: Shared types, constants, and validation schemas (Zod).
-- `packages/database`: Prisma schema and database connection logic.
-- `packages/ui`: Shared React component library.
-- `packages/backend-common`: Shared logic for backend services.
-- `packages/eslint-config` & `packages/typescript-config`: Centralized configurations.
+## 🏎️ Ignition
 
-## 💻 Getting Started
+Follow these steps to spin up the entire ecosystem on your local machine.
 
-### Prerequisites
-- Node.js (v18 or higher)
-- [pnpm](https://pnpm.io/) package manager
+```bash
+# 1. Clone the repository
+git clone https://github.com/sanyamhbtu/ExcelDraw.git
 
-### Installation
+# 2. Install dependencies via pnpm (vital for monorepos)
+pnpm install
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/sanyamhbtu/ExcelDraw.git
-   cd ExcelDraw
-   ```
+# 3. Setup environment and push the database schema
+cp .env.example .env
+cd packages/database && pnpm prisma db push
 
-2. **Install dependencies:**
-   ```bash
-   pnpm install
-   ```
+# 4. Ignite all packages and apps simultaneously
+pnpm dev
+```
 
-3. **Environment Setup:**
-   Copy the example environment file and fill in your database/service credentials.
-   ```bash
-   cp .env.example .env
-   ```
+<br/>
 
-4. **Database Setup:**
-   Run the Prisma migrations to set up your database schema.
-   ```bash
-   cd packages/database
-   pnpm prisma generate
-   pnpm prisma db push
-   ```
-   *(Or run `pnpm db:push` if you have a script for it)*
+<p align="center">
+  <a href="https://excel-draw-excel-front.vercel.app/">
+    <img src="https://img.shields.io/badge/Launch_Application-000000?style=for-the-badge&logo=vercel&logoColor=white" />
+  </a>
+</p>
 
-5. **Run the Development Server:**
-   Start all apps simultaneously from the root directory.
-   ```bash
-   pnpm dev
-   ```
-
-This will start:
-- Frontend on `http://localhost:3000`
-- HTTP Backend on `http://localhost:8080` (default)
-- WebSockets on `http://localhost:8081` (default)
-
-## 🤝 Contributing
-
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📝 License
-
-Distributed under the MIT License. See `LICENSE` for more information.
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=1e3a8a&height=100&section=footer" />
+</p>
