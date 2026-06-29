@@ -3,7 +3,7 @@ services:
     name: exceldraw-api
     env: node
     plan: free
-    buildCommand: pnpm install && pnpm run build --filter http-backend
+    buildCommand: pnpm install && cd packages/database && npx prisma generate && cd ../.. && pnpm run build --filter http-backend
     startCommand: node apps/http-backend/dist/index.js
     envVars:
       - key: PORT
@@ -19,7 +19,7 @@ services:
     name: exceldraw-ws
     env: node
     plan: free
-    buildCommand: pnpm install && pnpm run build --filter websockets
+    buildCommand: pnpm install && cd packages/database && npx prisma generate && cd ../.. && pnpm run build --filter websockets
     startCommand: node apps/websockets/dist/index.js
     envVars:
       - key: PORT
