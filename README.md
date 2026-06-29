@@ -1,84 +1,119 @@
-# Turborepo starter
+<div align="center">
+  <br />
+  <h1>✨ ExcelDraw</h1>
+  <p>
+    <strong>Instantly craft collaborative diagrams on the web.</strong>
+  </p>
+  <p>
+    Draw at the speed of thought with an infinite, zooming workspace built for teams. 
+  </p>
+  <br />
+</div>
 
-This is an official starter Turborepo.
+## 📸 Preview
 
-## Using this example
+<div align="center">
+  <!-- Note: Make sure to upload the landing page screenshot to the 'docs' folder or update this path to your hosted image URL -->
+  <img src="./docs/landing.png" alt="ExcelDraw Landing Page" width="100%" style="border-radius: 12px; box-shadow: 0 4px 30px rgba(0,0,0,0.1);" />
+</div>
 
-Run the following command:
+## 🚀 Features
 
-```sh
-npx create-turbo@latest
-```
+- **Infinite Canvas:** A seamless workspace where your ideas can blossom without limits.
+- **Real-Time Collaboration:** Powered by WebSockets, multiple users can draw and interact simultaneously.
+- **Cinematic UI/UX:** Stunning visuals, glassmorphism, fluid animations (Framer Motion), and a captivating particle background.
+- **Team Workspaces:** Create rooms, share links, and sync instantly.
+- **Modern Monorepo:** Structured using Turborepo for efficient scaling and development.
 
-## What's inside?
+## 🛠 Tech Stack
 
-This Turborepo includes the following packages/apps:
+**Frontend (Apps & UI)**
+- [Next.js](https://nextjs.org/) (App Router)
+- [React](https://reactjs.org/)
+- [Tailwind CSS](https://tailwindcss.com/) & [Framer Motion](https://www.framer.com/motion/)
+- [Radix UI](https://www.radix-ui.com/) (Shadcn components)
 
-### Apps and Packages
+**Backend (API & Real-time)**
+- Node.js & Express (`http-backend`)
+- WebSockets (`websockets`)
+- [Prisma](https://www.prisma.io/) (Database ORM)
+- [PostgreSQL](https://www.postgresql.org/)
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+**Architecture**
+- [Turborepo](https://turbo.build/repo)
+- TypeScript
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+## 📂 Project Structure
 
-### Utilities
+This project is a monorepo utilizing **Turborepo** with the following layout:
 
-This Turborepo has some additional tools already setup for you:
+### Apps
+- `apps/excel_front`: The Next.js frontend application.
+- `apps/http-backend`: REST API handling authentication, room creation, and user management.
+- `apps/websockets`: Real-time WebSocket server for syncing canvas data.
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+### Packages
+- `packages/common`: Shared types, constants, and validation schemas (Zod).
+- `packages/database`: Prisma schema and database connection logic.
+- `packages/ui`: Shared React component library.
+- `packages/backend-common`: Shared logic for backend services.
+- `packages/eslint-config` & `packages/typescript-config`: Centralized configurations.
 
-### Build
+## 💻 Getting Started
 
-To build all apps and packages, run the following command:
+### Prerequisites
+- Node.js (v18 or higher)
+- [pnpm](https://pnpm.io/) package manager
 
-```
-cd my-turborepo
-pnpm build
-```
+### Installation
 
-### Develop
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/sanyamhbtu/ExcelDraw.git
+   cd ExcelDraw
+   ```
 
-To develop all apps and packages, run the following command:
+2. **Install dependencies:**
+   ```bash
+   pnpm install
+   ```
 
-```
-cd my-turborepo
-pnpm dev
-```
+3. **Environment Setup:**
+   Copy the example environment file and fill in your database/service credentials.
+   ```bash
+   cp .env.example .env
+   ```
 
-### Remote Caching
+4. **Database Setup:**
+   Run the Prisma migrations to set up your database schema.
+   ```bash
+   cd packages/database
+   pnpm prisma generate
+   pnpm prisma db push
+   ```
+   *(Or run `pnpm db:push` if you have a script for it)*
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+5. **Run the Development Server:**
+   Start all apps simultaneously from the root directory.
+   ```bash
+   pnpm dev
+   ```
 
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+This will start:
+- Frontend on `http://localhost:3000`
+- HTTP Backend on `http://localhost:8080` (default)
+- WebSockets on `http://localhost:8081` (default)
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+## 🤝 Contributing
 
-```
-cd my-turborepo
-npx turbo login
-```
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+## 📝 License
 
-```
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+Distributed under the MIT License. See `LICENSE` for more information.
