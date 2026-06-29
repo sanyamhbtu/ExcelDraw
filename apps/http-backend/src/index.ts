@@ -10,11 +10,15 @@
  const app = express();
   app.use(cors({
     origin: (origin, callback) => {
-        const localRegex = /^http:\/\/(localhost|127\.0\.0\.1|192\.168\.\d{1,3}\.\d{1,3}):3000$/;
-        const frontendUrl = process.env.FRONTEND_URL;
+        const frontendUrl = process.env.FRONTEND_URL || "";
         
-        // Allow if no origin (e.g., Postman), matches the Vercel FRONTEND_URL, or matches localhost during dev
-        if (!origin || (frontendUrl && origin === frontendUrl) || localRegex.test(origin)) {
+        // Strip protocols and trailing slashes for a bulletproof includes check
+        const cleanFrontendUrl = frontendUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
+        
+        if (!origin || 
+            origin.includes("localhost") || 
+            origin.includes("127.0.0.1") ||
+            (cleanFrontendUrl && origin.includes(cleanFrontendUrl))) {
             callback(null, true);
         } else {
             callback(new Error(`Not allowed by CORS: ${origin}`));
