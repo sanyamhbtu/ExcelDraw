@@ -141,7 +141,7 @@ export default function Dashboard() {
               aria-label="Room name"
               required
               error={error}
-              onChange={(event: any) =>{
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>{
                 setSlug(event.target.value)
               }}
             />

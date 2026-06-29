@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import Cookies from 'js-cookie'
 import axios from "axios";
 import { HTTP_BACKEND } from "@/config";
- function SignIn() : any {
+function SignIn() {
   const [isLoading, setIsLoading] = useState(false);
   const [email,setEmail] = useState("");
   const [password,setPassword] = useState("");
@@ -65,7 +65,7 @@ import { HTTP_BACKEND } from "@/config";
                 type="email"
                 required
                 className="pl-9"
-                onChange={(event: any) =>{
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>{
                   setEmail(event.target.value);
                 }}
               />
@@ -82,7 +82,7 @@ import { HTTP_BACKEND } from "@/config";
                 type="password"
                 required
                 className="pl-9"
-                onChange={(event: any) =>{
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>{
                   setPassword(event.target.value);
                 }}
               />

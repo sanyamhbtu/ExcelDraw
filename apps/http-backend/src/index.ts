@@ -8,18 +8,20 @@
  import bcrypt from 'bcrypt'
  import cors from 'cors'
  const app = express();
- const allowedOrigin = /^http:\/\/(localhost|127\.0\.0\.1|192\.168\.\d{1,3}\.\d{1,3}):3000$/;
- app.use(cors({
+  app.use(cors({
     origin: (origin, callback) => {
-        // allow non-browser requests (no origin) and any localhost / LAN IP on port 3000
-        if (!origin || allowedOrigin.test(origin)) {
+        const localRegex = /^http:\/\/(localhost|127\.0\.0\.1|192\.168\.\d{1,3}\.\d{1,3}):3000$/;
+        const frontendUrl = process.env.FRONTEND_URL;
+        
+        // Allow if no origin (e.g., Postman), matches the Vercel FRONTEND_URL, or matches localhost during dev
+        if (!origin || (frontendUrl && origin === frontendUrl) || localRegex.test(origin)) {
             callback(null, true);
         } else {
             callback(new Error(`Not allowed by CORS: ${origin}`));
         }
     },
-  credentials: true
- }));
+    credentials: true
+  }));
  app.use(express.json());
 const bcryptSalt = 10
 const PORT = Number(process.env.PORT) || 4000
