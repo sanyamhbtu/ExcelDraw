@@ -3,9 +3,8 @@ services:
     name: exceldraw-api
     env: node
     plan: free
-    rootDir: apps/http-backend
-    buildCommand: pnpm install --filter http-backend... && pnpm build --filter http-backend
-    startCommand: pnpm start
+    buildCommand: pnpm install && pnpm run build --filter http-backend
+    startCommand: pnpm run start --filter http-backend
     envVars:
       - key: PORT
         value: 4000
@@ -18,9 +17,8 @@ services:
     name: exceldraw-ws
     env: node
     plan: free
-    rootDir: apps/websockets
-    buildCommand: pnpm install --filter websockets... && pnpm build --filter websockets
-    startCommand: pnpm start
+    buildCommand: pnpm install && pnpm run build --filter websockets
+    startCommand: pnpm run start --filter websockets
     envVars:
       - key: PORT
         value: 8080
