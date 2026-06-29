@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: exceldraw-api
+    env: node
+    rootDir: apps/http-backend
+    buildCommand: pnpm install --filter http-backend... && pnpm build --filter http-backend
+    startCommand: pnpm start
+    envVars:
+      - key: PORT
+        value: 4000
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+
+  - type: web
+    name: exceldraw-ws
+    env: node
+    rootDir: apps/websockets
+    buildCommand: pnpm install --filter websockets... && pnpm build --filter websockets
+    startCommand: pnpm start
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
