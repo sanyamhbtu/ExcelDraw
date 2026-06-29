@@ -1,304 +1,102 @@
 'use client';
-
-import Link from "next/link";
-import {
-  PenTool,
-  Users,
-  Layers,
-  Github,
-  Twitter,
-  Linkedin,
-  Zap,
-  MousePointer2,
-  Share2,
-  Sparkles,
-  ArrowRight,
-  Infinity as InfinityIcon,
-} from "lucide-react";
-
-const features = [
-  {
-    icon: PenTool,
-    title: "Expressive tools",
-    description:
-      "Pencil, shapes, arrows and freehand strokes with neon-grade styling — built for thinking out loud.",
-    glow: "from-fuchsia-500/30 to-violet-500/10",
-  },
-  {
-    icon: Users,
-    title: "Real-time co-draw",
-    description:
-      "Every stroke streams to your room over WebSockets. Draw together, instantly, from anywhere.",
-    glow: "from-cyan-500/30 to-blue-500/10",
-  },
-  {
-    icon: InfinityIcon,
-    title: "Infinite canvas",
-    description:
-      "Pan and zoom across an endless grid. Your ideas never run out of room to grow.",
-    glow: "from-violet-500/30 to-indigo-500/10",
-  },
-  {
-    icon: Zap,
-    title: "Blazing fast",
-    description:
-      "A hand-tuned canvas engine renders thousands of shapes at buttery 60fps.",
-    glow: "from-amber-400/30 to-fuchsia-500/10",
-  },
-  {
-    icon: Share2,
-    title: "Shareable rooms",
-    description:
-      "Spin up a room, share the link, and start collaborating in seconds. No friction.",
-    glow: "from-emerald-400/30 to-cyan-500/10",
-  },
-  {
-    icon: Layers,
-    title: "Durable by design",
-    description:
-      "Every shape is persisted, so your board is exactly where you left it next time.",
-    glow: "from-pink-500/30 to-violet-500/10",
-  },
-];
-
-const stats = [
-  { value: "60", suffix: "fps", label: "Render speed" },
-  { value: "∞", suffix: "", label: "Canvas size" },
-  { value: "<50", suffix: "ms", label: "Sync latency" },
-  { value: "100%", suffix: "", label: "Open source" },
-];
-
-const testimonials = [
-  {
-    name: "Alex Chen",
-    role: "Staff Engineer",
-    quote: "It feels like Figma and a terminal had a neon baby. Instantly my team's default whiteboard.",
-  },
-  {
-    name: "Sarah Johnson",
-    role: "Product Designer",
-    quote: "The real-time sync is flawless and the glow on dark mode is genuinely gorgeous.",
-  },
-  {
-    name: "Mike Roberts",
-    role: "Tech Lead",
-    quote: "Fast, infinite, collaborative. We replaced three tools with this one.",
-  },
-];
+import Link from 'next/link';
+import { useEffect } from 'react';
+import ParticleBackground from '@/components/cinematic/ParticleBackground';
+import ScrollVideoBackground from '@/components/cinematic/ScrollVideoBackground';
+import ScrollCards from '@/components/cinematic/ScrollCards';
+import PresentationSection from '@/components/cinematic/PresentationSection';
+import { PenTool } from 'lucide-react';
 
 export default function Home() {
+  const VIDEO_URL = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260616_212935_bbf608da-62d1-4f25-9be4-c346e4d09cc8.mp4';
+
+  useEffect(() => {
+    const updateHeroOpacity = () => {
+      const hero = document.getElementById('hero');
+      if (hero) {
+        const fade = Math.max(0, 1 - window.scrollY / (window.innerHeight * 0.3));
+        hero.style.opacity = fade.toString();
+      }
+    };
+    window.addEventListener('scroll', updateHeroOpacity, { passive: true });
+    return () => window.removeEventListener('scroll', updateHeroOpacity);
+  }, []);
+
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#070611] text-white selection:bg-fuchsia-500/30">
-      {/* ---------- animated background ---------- */}
-      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-[#070611]">
-        {/* 3D perspective grid (retro floor + back wall) */}
-        <div className="grid-scene">
-          <div className="grid-wall" />
-          <div className="grid-floor" />
-        </div>
-        {/* glowing horizon line where the planes meet */}
-        <div className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-gradient-to-r from-transparent via-cyan-200 to-transparent" />
-        <div className="absolute left-0 right-0 top-1/2 h-[3px] -translate-y-1/2 bg-gradient-to-r from-transparent via-cyan-300/80 to-transparent blur-[3px]" />
-        <div className="absolute left-[15%] right-[15%] top-1/2 h-20 -translate-y-1/2 bg-cyan-400/25 blur-[60px]" />
-        {/* aurora color wash (kept off the top/bottom edges so the grid shows) */}
-        <div className="absolute -left-[15%] top-[20%] h-[45vmax] w-[45vmax] rounded-full bg-violet-600/20 blur-[140px] animate-aurora animate-glow" />
-        <div className="absolute right-[-20%] top-[15%] h-[40vmax] w-[40vmax] rounded-full bg-fuchsia-600/15 blur-[140px] animate-aurora animate-glow" style={{ animationDelay: "-6s" }} />
-        {/* gentle side-only fade so vertical edge lines aren't harsh (leaves top/bottom grid bright) */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#070611,transparent_12%,transparent_88%,#070611)]" />
-      </div>
-
-      {/* ---------- nav ---------- */}
-      <header className="relative z-10 mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
+    <div className="relative min-h-screen font-sans bg-[#010101] text-white selection:bg-blue-500/30 overflow-x-hidden">
+      <ScrollVideoBackground videoUrl={VIDEO_URL} />
+      <ParticleBackground />
+      
+      {/* Navigation */}
+      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-5 md:px-10">
         <Link href="/" className="flex items-center gap-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 shadow-[0_0_20px_rgba(168,85,247,0.6)]">
-            <PenTool className="h-5 w-5 text-white" />
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+            <PenTool className="h-4 w-4 text-black" />
           </span>
-          <span className="text-lg font-bold tracking-tight neon-text">Excel.Draw</span>
+          <span className="text-xl font-bold tracking-tight">exceldraw</span>
         </Link>
-        <nav className="hidden items-center gap-8 text-sm text-white/70 md:flex">
-          <a href="#features" className="transition hover:text-white">Features</a>
-          <a href="#showcase" className="transition hover:text-white">Showcase</a>
-          <a href="#voices" className="transition hover:text-white">Voices</a>
-        </nav>
-        <Link
-          href="/auth"
-          className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-white backdrop-blur transition hover:border-violet-400/60 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]"
-        >
-          Launch app
-        </Link>
-      </header>
-
-      {/* ---------- hero ---------- */}
-      <section className="relative z-10 mx-auto flex max-w-5xl flex-col items-center px-6 pt-20 pb-28 text-center md:pt-28">
-        <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-500/10 px-4 py-1.5 text-xs font-medium text-violet-200 backdrop-blur">
-          <Sparkles className="h-3.5 w-3.5" />
-          Real-time collaborative whiteboard
-        </div>
-
-        <h1 className="max-w-4xl text-5xl font-extrabold leading-[1.05] tracking-tight md:text-7xl">
-          Draw at the
-          <span className="relative mx-3 inline-block bg-gradient-to-r from-fuchsia-400 via-violet-400 to-cyan-400 bg-clip-text text-transparent animate-gradient neon-text">
-            speed of thought
-          </span>
-        </h1>
-
-        <p className="mt-7 max-w-2xl text-lg text-white/65 md:text-xl">
-          An infinite neon canvas for teams. Sketch, diagram and brainstorm together
-          in real time — every stroke glows, every idea syncs instantly.
-        </p>
-
-        <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row">
-          <Link
-            href="/auth"
-            className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-8 py-4 text-base font-semibold text-white shadow-[0_0_35px_rgba(168,85,247,0.55)] transition hover:scale-[1.04] hover:shadow-[0_0_55px_rgba(168,85,247,0.85)]"
-          >
-            Start drawing free
-            <ArrowRight className="h-5 w-5 transition group-hover:translate-x-1" />
-          </Link>
-          <Link
-            href="/auth"
-            className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-8 py-4 text-base font-semibold text-white/90 backdrop-blur transition hover:border-cyan-400/50 hover:text-white"
-          >
-            <MousePointer2 className="h-5 w-5" />
-            Sign in
+        <div className="flex items-center gap-4">
+          <Link href="/auth" className="text-sm text-gray-300 hover:text-white transition-colors">Sign In</Link>
+          <Link href="/auth" className="text-sm bg-white text-black px-4 py-2 rounded-full font-medium hover:bg-gray-200 transition-colors">
+            Launch App
           </Link>
         </div>
+      </nav>
 
-        {/* stats */}
-        <div className="mt-20 grid w-full max-w-3xl grid-cols-2 gap-4 sm:grid-cols-4">
-          {stats.map((s) => (
-            <div
-              key={s.label}
-              className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-5 backdrop-blur"
-            >
-              <div className="bg-gradient-to-r from-fuchsia-300 to-cyan-300 bg-clip-text text-3xl font-bold text-transparent">
-                {s.value}
-                <span className="text-lg">{s.suffix}</span>
+      {/* Main Content */}
+      <div className="relative z-[2]">
+        {/* Hero */}
+        <section id="hero" className="relative h-screen w-full flex flex-col">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
+          <div className="relative z-10 flex-1 flex flex-col items-center justify-end text-center px-6 pb-24">
+            <p className="text-sm text-gray-400 mb-4 tracking-wider uppercase">Our Purpose:</p>
+            <h1 className="text-4xl md:text-6xl lg:text-[3.75rem] font-semibold leading-[1.15] max-w-4xl">
+              Instantly craft collaborative
+              <span className="relative inline-block mx-3">
+                <span className="absolute bottom-2 left-0 w-full h-2.5 bg-blue-600 rounded-sm" />
+                <span className="relative">diagrams</span>
+              </span>
+              on the web.
+            </h1>
+            <div className="flex flex-col sm:flex-row items-center gap-4 mt-10 justify-center">
+              <div className="flex items-center gap-2 bg-[#1a1a1a] border border-gray-700/50 rounded-lg px-8 py-3.5">
+                <span className="text-blue-500 font-mono text-sm">&gt;</span>
+                <code className="text-gray-200 font-mono text-sm">Draw at the speed of thought</code>
               </div>
-              <div className="mt-1 text-xs uppercase tracking-wider text-white/50">{s.label}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ---------- features ---------- */}
-      <section id="features" className="relative z-10 mx-auto max-w-7xl px-6 py-24">
-        <div className="mb-16 text-center">
-          <h2 className="text-4xl font-bold md:text-5xl">
-            Everything you need to{" "}
-            <span className="bg-gradient-to-r from-violet-400 to-cyan-400 bg-clip-text text-transparent">create</span>
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-white/60">
-            A focused toolset wrapped in a fast, beautiful, collaborative canvas.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {features.map(({ icon: Icon, title, description, glow }) => (
-            <div key={title} className="neon-card group rounded-2xl p-6">
-              <div className={`mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${glow} ring-1 ring-white/10`}>
-                <Icon className="h-6 w-6 text-white" />
-              </div>
-              <h3 className="mb-2 text-xl font-semibold">{title}</h3>
-              <p className="text-sm leading-relaxed text-white/60">{description}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ---------- showcase / preview ---------- */}
-      <section id="showcase" className="relative z-10 mx-auto max-w-6xl px-6 py-24">
-        <div className="mb-12 text-center">
-          <h2 className="text-4xl font-bold md:text-5xl">
-            Your canvas,{" "}
-            <span className="bg-gradient-to-r from-fuchsia-400 to-violet-400 bg-clip-text text-transparent">supercharged</span>
-          </h2>
-        </div>
-        <div className="relative mx-auto max-w-4xl animate-float">
-          <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-violet-600 via-fuchsia-600 to-cyan-500 opacity-50 blur-xl" />
-          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-[#0b0a16]">
-            {/* faux window chrome */}
-            <div className="flex items-center gap-2 border-b border-white/10 bg-white/[0.02] px-4 py-3">
-              <span className="h-3 w-3 rounded-full bg-red-400/80" />
-              <span className="h-3 w-3 rounded-full bg-yellow-400/80" />
-              <span className="h-3 w-3 rounded-full bg-green-400/80" />
-              <span className="ml-3 text-xs text-white/40">excel.draw / room / neon-sprint</span>
-            </div>
-            {/* faux canvas with glowing shapes */}
-            <div className="relative h-[340px] bg-[radial-gradient(circle_at_center,#12101f,#0b0a16)]">
-              <div className="absolute inset-0 neon-grid opacity-40" />
-              <div className="absolute left-[12%] top-[22%] h-24 w-40 rounded-xl border-2 border-fuchsia-400 shadow-[0_0_24px_rgba(232,121,249,0.7)]" />
-              <div className="absolute right-[18%] top-[30%] h-28 w-28 rounded-full border-2 border-cyan-400 shadow-[0_0_24px_rgba(34,211,238,0.7)]" />
-              <div className="absolute bottom-[20%] left-[34%] h-20 w-52 rotate-[-6deg] rounded-lg border-2 border-violet-400 shadow-[0_0_24px_rgba(167,139,250,0.7)]" />
-              <svg className="absolute inset-0 h-full w-full" aria-hidden>
-                <line x1="32%" y1="40%" x2="62%" y2="44%" stroke="#a78bfa" strokeWidth="2" style={{ filter: "drop-shadow(0 0 6px #a78bfa)" }} />
-              </svg>
+              <Link href="/auth" className="inline-flex items-center gap-2 bg-blue-600 text-white font-medium rounded-lg px-8 py-3.5 text-sm transition hover:bg-blue-500">
+                Get Started <span className="text-lg leading-none">&rarr;</span>
+              </Link>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* ---------- testimonials ---------- */}
-      <section id="voices" className="relative z-10 mx-auto max-w-7xl px-6 py-24">
-        <div className="mb-16 text-center">
-          <h2 className="text-4xl font-bold md:text-5xl">
-            Loved by{" "}
-            <span className="bg-gradient-to-r from-cyan-400 to-violet-400 bg-clip-text text-transparent">builders</span>
-          </h2>
-        </div>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {testimonials.map((t) => (
-            <div key={t.name} className="neon-card rounded-2xl p-7">
-              <p className="mb-6 text-lg leading-relaxed text-white/80">&ldquo;{t.quote}&rdquo;</p>
-              <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 font-semibold text-white shadow-[0_0_18px_rgba(168,85,247,0.5)]">
-                  {t.name.split(" ").map((n) => n[0]).join("")}
-                </div>
-                <div>
-                  <div className="font-semibold">{t.name}</div>
-                  <div className="text-sm text-white/50">{t.role}</div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ---------- CTA band ---------- */}
-      <section className="relative z-10 mx-auto max-w-5xl px-6 py-20">
-        <div className="relative overflow-hidden rounded-3xl border border-violet-400/20 bg-gradient-to-br from-violet-600/20 via-fuchsia-600/10 to-cyan-500/10 px-8 py-16 text-center backdrop-blur">
-          <div className="absolute inset-0 neon-grid opacity-30" />
-          <h2 className="relative text-4xl font-bold md:text-5xl neon-text">Ready to light up your ideas?</h2>
-          <p className="relative mx-auto mt-4 max-w-xl text-white/70">
-            Join a room and start drawing in seconds. Free, fast, and beautifully neon.
-          </p>
-          <Link
-            href="/auth"
-            className="relative mt-8 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-8 py-4 text-base font-semibold text-white shadow-[0_0_35px_rgba(168,85,247,0.6)] transition hover:scale-[1.04] hover:shadow-[0_0_55px_rgba(168,85,247,0.9)]"
-          >
-            Launch the canvas
-            <ArrowRight className="h-5 w-5" />
-          </Link>
-        </div>
-      </section>
-
-      {/* ---------- footer ---------- */}
-      <footer className="relative z-10 border-t border-white/10 bg-black/40">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-6 py-10 md:flex-row">
-          <div className="flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500">
-              <PenTool className="h-4 w-4 text-white" />
-            </span>
-            <span className="font-bold">Excel.Draw</span>
+          <div className="relative z-10 flex justify-center pb-8 animate-bounce">
+            <svg className="w-6 h-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
           </div>
-          <p className="text-sm text-white/50">&copy; 2026 Excel.Draw. Crafted with neon.</p>
-          <div className="flex gap-4 text-white/60">
-            <a href="https://github.com/sanyamhbtu/ExcelDraw" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="transition hover:text-white"><Github className="h-5 w-5" /></a>
-            <a href="https://x.com/SanyamJain__04" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)" className="transition hover:text-white"><Twitter className="h-5 w-5" /></a>
-            <a href="https://www.linkedin.com/in/sanyam-jain-1425611b9/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="transition hover:text-white"><Linkedin className="h-5 w-5" /></a>
+        </section>
+
+        {/* First Content Section */}
+        <div style={{ height: '150vh' }} className="flex flex-col items-center justify-center pointer-events-none relative z-10 px-6">
+          <div className="max-w-3xl text-center bg-black/40 p-8 md:p-12 rounded-3xl backdrop-blur-xl border border-white/10 shadow-2xl transition-all">
+            <h2 className="text-3xl md:text-5xl font-bold mb-6 text-white">A Canvas Without Limits</h2>
+            <p className="text-lg text-gray-300 leading-relaxed">Experience true freedom with an infinite, zooming workspace where every idea fits perfectly. Your diagrams blossom and come to life seamlessly as you explore.</p>
           </div>
         </div>
-      </footer>
+
+        {/* Sticky Cards Trigger & Content */}
+        <ScrollCards />
+
+        {/* Second Content Section */}
+        <div style={{ height: '100vh' }} className="flex flex-col items-center justify-center pointer-events-none relative z-10 px-6">
+          <div className="max-w-3xl text-center bg-black/40 p-8 md:p-12 rounded-3xl backdrop-blur-xl border border-white/10 shadow-2xl transition-all">
+            <h2 className="text-3xl md:text-5xl font-bold mb-6 text-white">Built for Teams</h2>
+            <p className="text-lg text-gray-300 leading-relaxed">Share a link and watch as your entire team collaborates in real-time. Everything is synced instantly with WebSockets, keeping everyone on the same page.</p>
+          </div>
+        </div>
+
+        {/* Final Presentation */}
+        <PresentationSection />
+      </div>
     </div>
   );
 }
